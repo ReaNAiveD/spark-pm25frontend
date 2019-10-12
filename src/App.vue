@@ -13,15 +13,18 @@
                 xAxisType : 'time',
                 labelMap: {
                     'time': '时间',
-                    'other': '其他'
+                    'city name':'城市',
+                    'temperature':'气温',
+                    'humidity':'舒适度',
+                    'average pm2.5': '平均PM2.5'
                 },
                 scale : [true, true]
             };
             return {
                 socketHost: "localhost",
-                socketPort: "8080",
+                socketPort: "8090",
                 pmData: {
-                    columns: ['time', 'PM2.5', 'other'],
+                    columns: ['time', 'city name', 'temperature', 'humidity', 'PM2.5', 'average pm2.5'],
                     rows: []
                 }
             }
@@ -33,7 +36,8 @@
             initWebSocket(){
                 this.websocket = new WebSocket(this.socketHost + ":" + this.socketPort + "/pm/websocket");
                 this.websocket.onmessage = function (message) {
-                    this.pmData.rows.push(message);
+                    // this.pmData.rows.push([message["time"], message["city name"], message["temperature"], message["humidity"], message["pm2.5"], message["average pm2.5"]]);
+                    this.pmData.rows.push(JSON.parse(message));
                 }
             }
         }
