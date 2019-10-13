@@ -13,7 +13,7 @@
                 xAxisType : 'time',
                 labelMap: {
                     'time': '时间',
-                    'city name':'城市',
+                    'predict': '预测PM2.5',
                     'temperature':'气温',
                     'humidity':'舒适度',
                     'average pm2.5': '平均PM2.5'
@@ -24,7 +24,7 @@
                 socketHost: "localhost",
                 socketPort: "8090",
                 pmData: {
-                    columns: ['time', 'city name', 'temperature', 'humidity', 'PM2.5', 'average pm2.5'],
+                    columns: ['time', 'predict', 'temperature', 'humidity', 'PM', 'average pm2.5'],
                     rows: []
                 }
             }
@@ -34,10 +34,12 @@
         },
         methods: {
             initWebSocket(){
-                this.websocket = new WebSocket(this.socketHost + ":" + this.socketPort + "/pm/websocket");
-                this.websocket.onmessage = function (message) {
+                this.websocket = new WebSocket("ws://" + this.socketHost + ":" + this.socketPort + "/pm/websocket");
+                this.websocket.onmessage = (message) => {
                     // this.pmData.rows.push([message["time"], message["city name"], message["temperature"], message["humidity"], message["pm2.5"], message["average pm2.5"]]);
-                    this.pmData.rows.push(JSON.parse(message));
+                    // eslint-disable-next-line no-console
+                    console.log(JSON.parse(message.data));
+                    this.pmData.rows.push(JSON.parse(message.data));
                 }
             }
         }
